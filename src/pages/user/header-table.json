@@ -1,0 +1,24 @@
+[
+    {
+        "text": "email",
+        "align": "left",
+        "sortable": true,
+        "value": "email"
+    },
+    {
+        "text": "level",
+        "align": "left",
+        "sortable": true,
+        "value": "levelUser"
+    },
+    {
+        "text": "Aktivitas Terakhir",
+        "align": "left",
+        "sortable": false,
+        "value": "updatedAt"
+    },
+    {
+        "text": "Aksi",
+        "value": "action"
+    }
+]
