@@ -6,6 +6,12 @@
         "value": "title"
     },
     {
+        "text": "episodes",
+        "align": "left",
+        "sortable": false,
+        "value": "episode"
+    },
+    {
         "text": "description",
         "align": "left",
         "sortable": true,

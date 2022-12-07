@@ -24,8 +24,8 @@ export default defineComponent({
       <v-text-field label="Cari" single-line hide-details></v-text-field>
     </v-card-title>
     <v-data-table :headers="headers" :items="items" :loading="loading" item-key="id" class="table-rounded">
-      <template v-slot:[`item.links`]="{ item }">
-        <router-link :to="'/main/user-hospital/' + item.id">Users</router-link>
+      <template v-slot:[`item.episode`]="{ item }">
+        <router-link :to="'/main/episode/' + item.id">Episodes</router-link>
       </template>
 
       <template #[`item.action`]="{ item }">

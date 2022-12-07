@@ -5,8 +5,9 @@ import EpisodeHeader from './EpisodeHeader.vue'
 import EpisodeDatatable from './EpisodeDatatable.vue'
 import { computed, onMounted, ref, reactive,defineComponent } from 'vue'
 import { useStore } from '@/store'
-import { ACTION_GET_PODCAST, ACTION_DELETE_PODCAST } from '@/store/module/podcast'
+import { ACTION_GET_EPISODE, ACTION_DELETE_EPISODE } from '@/store/module/episode'
 import FormEpisode from './FormEpisode.vue'
+import { useRoute } from 'vue-router/composables'
 
 export default defineComponent({
   components: {
@@ -17,6 +18,7 @@ export default defineComponent({
   setup(_, ctx) {
 
     const store = useStore()
+    const route = useRoute()
 
     const formAdd = ref(false)
 
@@ -44,14 +46,17 @@ export default defineComponent({
 
     async function submitDelete() {
 
-      await store.dispatch(ACTION_DELETE_PODCAST, dialogDelete.data)
+      await store.dispatch(ACTION_DELETE_EPISODE, dialogDelete.data)
       dialogDelete.data = null
       dialogDelete.show = false
       dialogDelete.title = ""
     }
 
     onMounted(async () => {
-        await store.dispatch(ACTION_GET_PODCAST, {})
+      
+      if(route.params.podcastId){
+        await store.dispatch(ACTION_GET_EPISODE, route.params.podcastId)
+      }
       
     })
     return {
@@ -61,7 +66,7 @@ export default defineComponent({
       hideFormAdd,
       showDelete,
       submitDelete,
-      dataPodcast: computed(() => store.state.podcast.dataPodcast)
+      dataEpisode: computed(() => store.state.episode.dataEpisode)
     }
   },
 })
@@ -73,7 +78,7 @@ export default defineComponent({
     </v-col>
 
     <v-col cols="12">
-      <episode-datatable :items="dataPodcast.items" :loading="dataPodcast.loading" @add="showFormAdd"
+      <episode-datatable :items="dataEpisode.items" :loading="dataEpisode.loading" @add="showFormAdd"
          @remove="showDelete" />
     </v-col>
     <form-episode :show="formAdd" @cancel="hideFormAdd" />
