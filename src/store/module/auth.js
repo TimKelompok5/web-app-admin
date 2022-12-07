@@ -112,6 +112,7 @@ const actions = {
                             email: result.user.email,
                             level: "USER",
                             isActive:true,
+                            photoUrl:result.user.photoURL,
                             createdAt: new Date().getTime(),
                             updatedAt: new Date().getTime(),
                         })
