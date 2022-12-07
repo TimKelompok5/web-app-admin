@@ -14,6 +14,7 @@ export default {
     const name = ref('')
     const email = ref('')
     const password = ref('')
+    const loading = ref(false)
     const socialLink = [
       {
         icon: mdiGoogle,
@@ -23,6 +24,7 @@ export default {
     ]
 
     async function signInWithEmailAndAPssword() {
+      loading.value = true
       if (email.value || password.value || name.value) {
         const {success}=await store.dispatch(ACTION_REGISTER, {
           email: email.value,
@@ -32,9 +34,10 @@ export default {
         if(success){
           router.push('/main/dashboard')
         }
+        loading.value = false
         return
       }
-
+      loading.value = false
     }
 
     return {
@@ -48,7 +51,8 @@ export default {
         mdiEyeOutline,
         mdiEyeOffOutline,
       },
-      signInWithEmailAndAPssword
+      signInWithEmailAndAPssword,
+      loading
     }
   },
 }
@@ -60,11 +64,11 @@ export default {
         <!-- logo -->
         <v-card-title class="d-flex align-center justify-center py-7">
           <router-link to="/" class="d-flex align-center">
-            <v-img :src="require('@/assets/images/logos/logo.svg')" max-height="30px" max-width="30px" alt="logo"
+            <v-img :src="require('@/assets/images/logos/logo_primary.webp')" max-height="30px" max-width="30px" alt="logo"
               contain class="me-3 "></v-img>
 
             <h2 class="text-2xl font-weight-semibold">
-              Materio
+              Opini
             </h2>
           </router-link>
         </v-card-title>
@@ -100,7 +104,8 @@ export default {
               </template>
             </v-checkbox>
 
-            <v-btn @click="signInWithEmailAndAPssword" block color="primary" class="mt-6">
+            <v-btn @click="signInWithEmailAndAPssword" :loading="loading"
+              :disabled="loading" block color="primary" class="mt-6">
               Sign Up
             </v-btn>
           </v-form>
@@ -125,7 +130,8 @@ export default {
 
         <!-- social link -->
         <v-card-actions class="d-flex justify-center">
-          <v-btn block color="primary" class="mt-6" >
+          <v-btn :loading="loading"
+              :disabled="loading" block color="primary" class="mt-6" >
             Continue With Google
           </v-btn>
         </v-card-actions>

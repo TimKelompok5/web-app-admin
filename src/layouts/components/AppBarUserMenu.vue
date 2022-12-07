@@ -26,7 +26,7 @@ export default defineComponent({
     async function signOut() {
       const success = await store.dispatch(ACTION_LOGOUT)
       if (success) {
-        router.push({name:'login'})
+        router.replace({name:'login'})
       }
     }
     function goto(name) {

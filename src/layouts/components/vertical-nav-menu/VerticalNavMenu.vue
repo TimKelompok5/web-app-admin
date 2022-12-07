@@ -51,7 +51,7 @@ export default defineComponent({
         <nav-menu-link v-if="item.type == 'link'" :key="item.link" :title="item.name" :to="item.link" :icon="item.icon"
           v-show="hasAccess(item.visible)" />
 
-        <nav-menu-group v-else-if="item.type == 'sub'" :key="item.link + 'group'" :title="item.name" :icon="item.icon">
+        <nav-menu-group v-show="hasAccess(item.visible)"  v-else-if="item.type == 'sub'" :key="item.link + 'group'" :title="item.name" :icon="item.icon">
           <nav-menu-link v-for="(item2, idx) in item.child" :key="idx" :title="item2.name" :to="item2.link"
             v-show="hasAccess(item2.visible)" />
         </nav-menu-group>

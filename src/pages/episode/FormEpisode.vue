@@ -7,6 +7,7 @@ import { useFormProps, useForms } from "@/composables/useForm"
 import { showError } from '@/plugins/notification';
 import { useRoute } from 'vue-router/composables';
 
+
 export default defineComponent({
     props: {
         ...useFormProps()
@@ -25,11 +26,14 @@ export default defineComponent({
             title: "",
             description: "",
             thumbnail: null,
-            audioUrl:null,
-            podcastId:""
+            audioUrl: null,
+            podcastId: "",
+            durationInSeconds: 0
         })
 
         const isRecording = ref(false)
+
+        let timer = null
 
 
         async function startRecordAudio() {
@@ -43,10 +47,7 @@ export default defineComponent({
             })
                 .then((st) => {
                     stream.value = st
-
                     mediaRecorder.value = new MediaRecorder(st)
-
-
                     audioBlobs.value = []
 
 
@@ -66,27 +67,41 @@ export default defineComponent({
         async function stopRecording() {
             stream.value.getTracks().forEach(track => track.stop())
 
-            const audioBlob = new Blob(audioBlobs.value,{type:"audio/mp3"})
+            const audioBlob = new Blob(audioBlobs.value, { type: "audio/mp3" })
             form.audioUrl = audioBlob
+
             // const audio = URL.createObjectURL(audioBlob)
             // const pl = new Audio(audio)
         }
 
         async function toggle() {
             if (isRecording.value) {
+                clearInterval(timer)
                 mediaRecorder.value.stop()
             } else {
+                timer = setInterval(() => {
+                    form.durationInSeconds += 1
+                }, 1000)
+
                 startRecordAudio()
             }
-
             isRecording.value = !isRecording.value
+
         }
 
-        onMounted(()=>{
+        function getFormatCount() {
+
+            let minutes = Math.floor(form.durationInSeconds / 60);
+            let seconds = form.durationInSeconds % 60;
+
+            let timeString = `${minutes}:${seconds}`;
+            return timeString
+        }
+        onMounted(() => {
             form.podcastId = route.params.podcastId
         })
-        
-    
+
+
         return {
             form,
             showPassword,
@@ -94,9 +109,11 @@ export default defineComponent({
             mdiEye,
             mdiEyeOff,
             mdiMicrophone,
-            act:ACTION_POST_EPISODE,
+            act: ACTION_POST_EPISODE,
             ...useForms(ctx, store),
-            toggle
+            toggle,
+            isRecording,
+            getFormatCount
         }
     }
 })
@@ -120,13 +137,13 @@ export default defineComponent({
                             </v-col>
                             <v-col cols="12">
                                 <v-file-input v-model="form.thumbnail" label="Thumbnail" outlined dense></v-file-input>
-                            
                             </v-col>
                             <v-col cols="12">
-                                <v-btn cols="12" @click="toggle" fab dark color="indigo">
-                                    <v-icon dark>
+                                <v-btn cols="12" @click="toggle" outlined dark color="indigo">
+                                    <v-icon dark :color="isRecording ? 'green accent-3' : 'grey lighten-1'">
                                         {{ mdiMicrophone }}
                                     </v-icon>
+                                    {{ getFormatCount() }}
                                 </v-btn>
                             </v-col>
 
@@ -140,8 +157,8 @@ export default defineComponent({
                     <v-btn :disabled="loading" @click="cancel" color="blue darken-1" text>
                         Cancel
                     </v-btn>
-                    <v-btn :loading="loading" :disabled="loading" @click="onSubmit(act, form)"
-                        color="blue darken-1" text> Save</v-btn>
+                    <v-btn :loading="loading" :disabled="loading" @click="onSubmit(act, form)" color="blue darken-1"
+                        text> Save</v-btn>
                 </v-card-actions>
             </v-card>
         </template>

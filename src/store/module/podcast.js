@@ -51,7 +51,9 @@ const actions = {
             auth.onAuthStateChanged(async (user) => {
                 const userRef = query(collection(db, "PODCAST"),where('createdBy','==',user.uid))
 
+                
                 const data = await getDocs(userRef)
+                console.log(data.docs)
                 const convert = data.docs.map((v) => {
 
                     const res = v.data()
