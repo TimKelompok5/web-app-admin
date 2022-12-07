@@ -3,7 +3,7 @@
 import { mdiFacebook, mdiTwitter, mdiGithub, mdiGoogle, mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js'
 import { ref } from 'vue'
 import { useStore } from "@/store/index"
-import { ACTION_REGISTER } from "@/store/module/auth"
+import { ACTION_REGISTER,ACTION_LOGIN_GOOGLE } from "@/store/module/auth"
 import { useRouter } from 'vue-router/composables'
 
 export default {
@@ -26,12 +26,12 @@ export default {
     async function signInWithEmailAndAPssword() {
       loading.value = true
       if (email.value || password.value || name.value) {
-        const {success}=await store.dispatch(ACTION_REGISTER, {
+        const { success } = await store.dispatch(ACTION_REGISTER, {
           email: email.value,
           password: password.value,
           name: name.value
         })
-        if(success){
+        if (success) {
           router.push('/main/dashboard')
         }
         loading.value = false
@@ -40,13 +40,29 @@ export default {
       loading.value = false
     }
 
+    async function loginGoogle() {
+      loading.value = true
+
+      const { success, message } = await store.dispatch(ACTION_LOGIN_GOOGLE, true)
+
+      alert.show = true,
+        alert.message = message,
+        alert.type = success ? 'success' : 'error'
+
+      loading.value = false
+
+      if (success) {
+        router.push({ name: 'dashboard' })
+      }
+    }
+
     return {
       isPasswordVisible,
       name,
       email,
       password,
       socialLink,
-
+      loginGoogle,
       icons: {
         mdiEyeOutline,
         mdiEyeOffOutline,
@@ -64,8 +80,8 @@ export default {
         <!-- logo -->
         <v-card-title class="d-flex align-center justify-center py-7">
           <router-link to="/" class="d-flex align-center">
-            <v-img :src="require('@/assets/images/logos/logo_primary.webp')" max-height="30px" max-width="30px" alt="logo"
-              contain class="me-3 "></v-img>
+            <v-img :src="require('@/assets/images/logos/logo_primary.webp')" max-height="30px" max-width="30px"
+              alt="logo" contain class="me-3 "></v-img>
 
             <h2 class="text-2xl font-weight-semibold">
               Opini
@@ -104,8 +120,8 @@ export default {
               </template>
             </v-checkbox>
 
-            <v-btn @click="signInWithEmailAndAPssword" :loading="loading"
-              :disabled="loading" block color="primary" class="mt-6">
+            <v-btn @click="signInWithEmailAndAPssword" :loading="loading" :disabled="loading" block color="primary"
+              class="mt-6">
               Sign Up
             </v-btn>
           </v-form>
@@ -130,8 +146,7 @@ export default {
 
         <!-- social link -->
         <v-card-actions class="d-flex justify-center">
-          <v-btn :loading="loading"
-              :disabled="loading" block color="primary" class="mt-6" >
+          <v-btn @click="loginGoogle" :loading="loading" :disabled="loading" block color="primary" class="mt-6">
             Continue With Google
           </v-btn>
         </v-card-actions>

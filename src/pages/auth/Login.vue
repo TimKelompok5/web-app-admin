@@ -3,7 +3,7 @@
   // eslint-disable-next-line object-curly-newline
   import { mdiGoogleCirclesGroup, mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js'
   import { onMounted,onDeactivated, reactive, ref ,defineComponent} from 'vue'
-  import {ACTION_LOGIN} from "@/store/module/auth"
+  import {ACTION_LOGIN,ACTION_LOGIN_GOOGLE} from "@/store/module/auth"
   import {useStore} from "@/store/index"
   import { useRouter } from "vue-router/composables"
   
@@ -59,6 +59,22 @@
         }
         
      }
+     async function loginGoogle(){
+      loading.value = true
+        
+        const {success,message} = await store.dispatch(ACTION_LOGIN_GOOGLE,false)
+  
+        alert.show = true,
+        alert.message= message,
+        alert.type = success ?'success':'error'
+  
+        loading.value = false
+  
+        if(success){
+          router.push({name:'dashboard'})
+        }
+   
+     }
   
      const onEnter = window.addEventListener('keydown',(ev)=>{
         if(ev.keyCode == 13){
@@ -84,6 +100,7 @@
         },
         alert,
         signIn,
+        loginGoogle,
         loading
       }
     },
@@ -212,7 +229,7 @@
               block
               color="primary"
               class="mt-6"
-              @click="signIn"
+              @click="loginGoogle"
             >
               Login With Google
             </v-btn>
