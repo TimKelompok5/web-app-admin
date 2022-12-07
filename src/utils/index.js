@@ -34,7 +34,14 @@ export const useSession = () => {
   }
 }
 
-export const levelUserHospital = [
+export const parseMessageAuthError=(code)=>{
+  if(code == "auth/invalid-email") return "Email tidak valid"
+  if(code == "auth/user-not-found") return "Tidak dapat menemukan data user"
+
+  return `Tidak diketahui ${code}`
+} 
+
+export const levelUser = [
   {
     value: "USER_HOSPITAL",
     text: "User"
@@ -44,45 +51,7 @@ export const levelUserHospital = [
     text: "Admin"
   }
 ]
-export const levelUserAdmin = [
-  {
-    value: "DEV",
-    text: "Developer"
-  }
-]
 
-export const deviceTypes = [
-  {
-    "value":"CORPORATE",
-    "name":"Corporate"
-  },
-  {
-    "value":"CONSUMER",
-    "name":"Consumer"
-  }
-]
-export const typeQuestion = [
-  {
-    text: "Pilihan Ganda",
-    type: "radio"
-  },
-  {
-    text: "Kotak Centang",
-    type: "checkbox"
-  },
-  {
-    text: "Jawaban Tertulis",
-    type: "essay"
-  },
-  {
-    text: "Tanggal",
-    type: "date"
-  },
-  {
-    text: "Gambar",
-    type: "image"
-  }
-]
 
 Array.prototype.move = function (from, to) {
   

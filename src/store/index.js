@@ -1,12 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import auth from "@/store/module/auth.js"
-import device from "@/store/module/device.js"
-import hospital from "@/store/module/hospital.js"
-import userhospital from "@/store/module/userhospital.js"
-import apikey from "@/store/module/apikey.js"
-import questionnaire from "@/store/module/questionnaire.js"
 import user from "@/store/module/user.js"
+import podcast from "@/store/module/podcast.js"
 
 import {getCurrentInstance} from "vue"
 
@@ -18,12 +14,8 @@ const store = new Vuex.Store({
   actions: {},
   modules: {
     auth,
-    device,
-    hospital,
-    userhospital,
-    apikey,
-    questionnaire,
-    user
+    user,
+    podcast
   },
 })
 

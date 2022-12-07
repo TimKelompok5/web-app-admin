@@ -1,27 +1,21 @@
 [
     {
-        "text": "email",
+        "text": "title",
         "align": "left",
         "sortable": true,
-        "value": "email"
+        "value": "title"
     },
     {
-        "text": "name",
+        "text": "description",
         "align": "left",
         "sortable": true,
-        "value": "name"
-    },
-    {
-        "text": "level",
-        "align": "left",
-        "sortable": true,
-        "value": "level"
+        "value": "description"
     },
     {
         "text": "Aktivitas Terakhir",
         "align": "left",
         "sortable": false,
-        "value": "updatedAt"
+        "value": "createdAt"
     },
     {
         "text": "Aksi",

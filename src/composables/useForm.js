@@ -1,4 +1,3 @@
-import { deviceTypes } from "@/utils"
 import { ref } from 'vue'
 
 export const useFormProps = () => {
@@ -34,7 +33,6 @@ export const useForms=(ctx,store)=>{
     return {
         cancel,
         loading,
-        deviceTypes,
         onSubmit
     }
 

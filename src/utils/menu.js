@@ -21,7 +21,7 @@ const menu = [
         ]
     },
     {
-        name: "Features",
+        name: "Feature",
         link: "",
         type: "divider",
         icon:mdiAlphaTBoxOutline,
@@ -31,14 +31,13 @@ const menu = [
         ]
     },
     {
-        name: "Credentials",
-        link: "/main/api-key",
+        name: "My Podcast",
+        link: "/main/podcast",
         type: "link",
-        icon:mdiEyeOutline,
+        icon:mdiHomeOutline,
         child: [],
         visible:[
-            "USER_HOSPITAL",
-            "ADMIN_HOSPITAL"
+            "PUBLIC"
         ]
     },
     {
@@ -47,36 +46,18 @@ const menu = [
         type: "sub",
         icon:mdiTable,
         visible:[
+            "ADMIN",
             "DEV"
         ],
         child: [
             {
-                name: "Hospital",
+                name: "Episode",
                 link: "/main/hospital",
                 type: "link",
                 icon:mdiFileOutline,
                 child: [],
                 visible:[
-                    "DEV"
-                ]
-            },
-            {
-                name: "Device",
-                link: "/main/device",
-                type: "link",
-                icon:mdiFormSelect,
-                child: [],
-                visible:[
-                    "DEV"
-                ]
-            },
-            {
-                name: "Questionnaire",
-                link: "/main/questionnaire",
-                type: "link",
-                icon:mdiFormSelect,
-                child: [],
-                visible:[
+                    "ADMIN",
                     "DEV"
                 ]
             }
@@ -89,7 +70,7 @@ const menu = [
         icon:mdiAlphaTBoxOutline,
         child: [],
         visible:[
-            "PUBLIC"
+            "PUBLIC",
         ]
     },
     {
@@ -99,7 +80,7 @@ const menu = [
         icon:mdiEyeOutline,
         child: [],
         visible:[
-            "DEV"
+            "DEV",
         ]
     },
     {

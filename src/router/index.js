@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import {useSession} from "@/utils"
+import {useFirebase} from "@/composables/useFirebase"
 
 Vue.use(VueRouter)
 
@@ -25,6 +25,22 @@ const routess = [
         path:'dashboard',
         name:'dashboard',
         component:()=>import("@/pages/dashboard/Dashboard.vue"),
+        meta:{
+          requiresAuth:true
+        },
+      },
+      {
+        path:'podcast',
+        name:'podcast',
+        component:()=>import("@/pages/podcast/Podcast.vue"),
+        meta:{
+          requiresAuth:true
+        },
+      },
+      {
+        path:'episode/:podcastId',
+        name:'episode',
+        component:()=>import("@/pages/episode/Episode.vue"),
         meta:{
           requiresAuth:true
         },
@@ -61,7 +77,15 @@ const routess = [
       {
         path:'login',
         name:'login',
-        component: () => import('@/pages/login/Login.vue'),
+        component: () => import('@/pages/auth/Login.vue'),
+        meta:{
+          requiresAuth:false
+        },
+      },
+      {
+        path:'register',
+        name:'register',
+        component: () => import('@/pages/auth/Register.vue'),
         meta:{
           requiresAuth:false
         },
@@ -78,12 +102,14 @@ const router = new VueRouter({
 
 router.beforeEach((to,from,next)=>{
   if(to.meta.requiresAuth){
-    const user = useSession().getUser()
-    if(user){
-      next()
-    }else{
-      next({name:'login'})
-    }
+    const {auth} = useFirebase()
+    auth.onAuthStateChanged((user)=>{
+      if(user){
+        next()
+      }else{
+        next({name:'login'})
+      }
+    })
   }else{
     next()
   }

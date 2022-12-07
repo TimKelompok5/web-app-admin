@@ -1,17 +1,16 @@
 <script>
 // eslint-disable-next-line object-curly-newline
-import { useStore } from '@/store'
 import { mdiKeyOutline, mdiLockOpenOutline, mdiEyeOffOutline, mdiEyeOutline } from '@mdi/js'
 import { ref,defineComponent } from 'vue'
 import {ACTION_RESET_PASSWORD} from "@/store/module/user"
 import { showError } from '@/plugins/notification'
-import {  useSession } from '@/utils'
+import {useStore} from "@/store/index"
 import {useRouter} from "vue-router/composables"
 
 export default defineComponent({
   setup() {
+
     const store = useStore()
-    const user = useSession().getUser()
     const router = useRouter()
     
 

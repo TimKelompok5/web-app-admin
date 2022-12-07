@@ -1,6 +1,6 @@
 import { showError, showSuccess } from "@/plugins/notification"
-import { useApi } from "@/utils/api"
-
+import { useFirebase } from "@/composables/useFirebase"
+import { collection,doc,getDoc, getDocs } from "firebase/firestore"
 
 const GET_USER = 'GET_USER'
 
@@ -12,9 +12,13 @@ const DELETE_USER = 'DELETE_USER'
 
 const RESET_PASSWORD = 'RESET_PASSWORD'
 
+const GET_PROFILE = 'GET_PROFILE'
+
 
 
 export const ACTION_GET_USER = `user/${GET_USER}`
+
+export const ACTION_GET_PROFILE = `user/${GET_PROFILE}`
 
 export const MUTATION_GET_USER = `user/${GET_USER}`
 
@@ -34,6 +38,7 @@ const state = {
         currentPage: 1,
         totalPages: 1
     },
+    profile:{}
 
 }
 
@@ -41,86 +46,80 @@ const actions = {
     [GET_USER]({ commit }, id) {
         return new Promise(async (resolve) => {
 
-            const api = useApi()
+            const { db } = useFirebase()
+            const userRef = collection(db, "USER", "")
 
-            const { success, message, data } = await api.get(`api/admin/users?page=0&size=100`)
+            const data = await getDocs(userRef)
+            const convert = data.docs.map((v) => {
+                const res = v.data()
+                return{
+                    name: res.name,
+                    email:res.email != undefined ? res.email : "",
+                    level:res.level != undefined ? res.level :""
+                }
+            })
+            commit(GET_USER, convert)
 
-            if (success) {
-                commit(GET_USER, data)
-            }
-            resolve(success)
+            resolve(true)
+        })
+    },
+    [GET_PROFILE]({commit}){
+        return new Promise(async (resolve)=>{
+            const {db,auth} = useFirebase()
+            auth.onAuthStateChanged(async user=> {
+                const ref = doc(db,"USER",user.uid)
+                const data = await getDoc(ref)
+                console.log(data.data())
+                if(data.exists()){
+                    commit(GET_PROFILE,data.data())
+                }
+            })
+          
         })
     },
     [POST_USER]({ commit }, body) {
         return new Promise(async (resolve) => {
-            const api = useApi()
-
-            const { success, message, data } = await api
-                .post(`api/admin/user`, body)
-            if (success) {
-                showSuccess(message)
-                commit(POST_USER, data)
-            } else {
-                showError(message)
-            }
-            resolve(success)
+         
+            resolve(false)
         })
     },
     [PUT_USER]({ commit }, body) {
         return new Promise(async (resolve) => {
-            const api = useApi()
 
-            const { message, data, success } = await api.update(`api/admin/user/${body.id}`, body)
 
-            if (success) {
-                showSuccess(message)
-                commit(POST_USER, data)
-            } else {
-                showError(message)
-            }
-            resolve(success)
+
+            resolve(false)
         })
     },
     [DELETE_USER]({ commit }, body) {
         return new Promise(async (resolve) => {
-            const api = useApi()
 
-            const { message, data, success } = await api.del(`api/admin/user/${body.id}`)
-            if (success) {
-                showSuccess(message)
-                commit(DELETE_USER, data)
-            } else {
-                showError(message)
-            }
-            resolve(success)
+
+
+            resolve(false)
         })
     },
-    [RESET_PASSWORD]({},body){
-       return new Promise(async(resolve)=>{
-        const api = useApi()
+    [RESET_PASSWORD]({ }, body) {
+        return new Promise(async (resolve) => {
 
-        const {success,message} = await api.update(`api/admin/user/reset-password`,body)
-
-        if (success) {
-            showSuccess(message)
-        } else {
-            showError(message)
-        }
-        resolve(success)
-       })
+            resolve(false)
+        })
     }
 }
 
 const mutations = {
-    [GET_USER](state, { items, page, totalPages }) {
+    [GET_USER](state, items) {
         state.dataUser = {
             items: items,
             loading: false,
             error: null,
-            currentPage: page,
-            totalPages: totalPages
+            currentPage: 0,
+            totalPages: 0
         }
 
+    },
+    [GET_PROFILE](state,data){
+        state.profile = data
     },
     [POST_USER](state, data) {
         const exist = state.dataUser.items

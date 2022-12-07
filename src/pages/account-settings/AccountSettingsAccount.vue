@@ -1,3 +1,33 @@
+<script>
+import { ACTION_GET_PROFILE } from '@/store/module/user'
+import { mdiAlertOutline, mdiCloudUploadOutline } from '@mdi/js'
+import { onMounted } from 'vue'
+import {useStore} from "@/store/index"
+
+export default {
+  props: {
+    accountData: {
+      type: Object,
+      default: () => {},
+    },
+  },
+  setup(props) {
+    const store = useStore()
+
+    onMounted(async ()=>{
+      await store.dispatch(ACTION_GET_PROFILE)
+    })
+
+    return {
+      icons: {
+        mdiAlertOutline,
+        mdiCloudUploadOutline,
+      },
+      
+    }
+  },
+}
+</script>
 <template>
   <v-card
     flat
@@ -12,7 +42,7 @@
             cols="12"
           >
             <v-text-field
-              v-model="user.email"
+            
               label="Email"
               disabled
               dense
@@ -46,27 +76,4 @@
   </v-card>
 </template>
 
-<script>
-import { useSession } from '@/utils'
-import { mdiAlertOutline, mdiCloudUploadOutline } from '@mdi/js'
 
-export default {
-  props: {
-    accountData: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  setup(props) {
-    const user = useSession().getUser()
-
-    return {
-      user,
-      icons: {
-        mdiAlertOutline,
-        mdiCloudUploadOutline,
-      },
-    }
-  },
-}
-</script>

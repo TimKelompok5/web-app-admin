@@ -1,7 +1,7 @@
 <script>
 import { useStore } from '@/store'
 import { ACTION_LOGOUT } from "@/store/module/auth"
-import { useSession } from '@/utils'
+import { useFirebase } from '@/composables/useFirebase'
 import {useRouter,useRoute} from "vue-router/composables"
 import {
   mdiAccountOutline,
@@ -21,12 +21,12 @@ export default defineComponent({
     const store = useStore(ctx)
     const router = useRouter()
     const route = useRoute()
-    const user = useSession().getUser()
+    const user = useFirebase().auth.currentUser
 
     async function signOut() {
       const success = await store.dispatch(ACTION_LOGOUT)
       if (success) {
-        router.push("/auth/login")
+        router.push({name:'login'})
       }
     }
     function goto(name) {
@@ -73,7 +73,7 @@ export default defineComponent({
           <span class="text--primary font-weight-semibold mb-n1">
             {{user.email ? user.email : 'Unknown'}}
           </span>
-          <small class="text--disabled text-capitalize">{{user.levelUser ? user.levelUser : 'Unknown'}}</small>
+          <small class="text--disabled text-capitalize">Welcome</small>
         </div>
       </div>
 
