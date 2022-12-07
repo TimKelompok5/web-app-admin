@@ -19,13 +19,13 @@ export default defineComponent({
 <template>
   <v-card>
     <v-card-title>
-      <v-btn data-testid="button" outlined small @click="add">Tambah</v-btn>
+      <!-- <v-btn data-testid="button" outlined small @click="add">Tambah</v-btn> -->
       <v-spacer></v-spacer>
       <v-text-field label="Cari" single-line hide-details></v-text-field>
     </v-card-title>
     <v-data-table :headers="headers" :items="items" :loading="loading" item-key="id" class="table-rounded">
-      <template v-slot:[`item.links`]="{ item }">
-        <router-link :to="'/main/user-hospital/' + item.id">Users</router-link>
+      <template v-slot:[`item.updatedAt`]="{ item }">
+        {{new Date(item.updatedAt)}}
       </template>
 
       <template #[`item.action`]="{ item }">

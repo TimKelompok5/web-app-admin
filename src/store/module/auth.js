@@ -80,6 +80,7 @@ const actions = {
                 name: body.name,
                 email: body.email,
                 level: "USER",
+                isActive:true,
                 createdAt: new Date().getTime(),
                 updatedAt: new Date().getTime(),
             })
@@ -110,6 +111,7 @@ const actions = {
                             name: result.user.displayName,
                             email: result.user.email,
                             level: "USER",
+                            isActive:true,
                             createdAt: new Date().getTime(),
                             updatedAt: new Date().getTime(),
                         })
