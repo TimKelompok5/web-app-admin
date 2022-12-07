@@ -27,8 +27,6 @@ export default defineComponent({
 
         const isRecording =ref(false)
 
-       
-
 
         async function startRecordAudio(){
             if(!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)){
