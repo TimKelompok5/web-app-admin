@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app"
 import {getAuth} from "firebase/auth"
 import {getFirestore} from "firebase/firestore"
+import {getStorage} from "firebase/storage"
 export const useFirebase = () => {
 
     const app = initializeApp({
@@ -15,9 +16,11 @@ export const useFirebase = () => {
 
     const auth = getAuth(app)
     const db = getFirestore(app)
+    const bucket = getStorage(app)
     return {
         app,
         auth,
-        db
+        db,
+        bucket
     }
 }

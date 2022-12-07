@@ -1,3 +1,4 @@
+import { showError, showSuccess } from '@/plugins/notification'
 import { ref } from 'vue'
 
 export const useFormProps = () => {
@@ -24,8 +25,11 @@ export const useForms=(ctx,store)=>{
         const success = await store.dispatch(act,data)
         loading.value = false
         if(success){
+            showSuccess("Berhasil")
             cancel()
+            return
         }
+        showError("Gagal")
 
     }
 

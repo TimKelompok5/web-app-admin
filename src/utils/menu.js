@@ -51,14 +51,14 @@ const menu = [
         ],
         child: [
             {
-                name: "Episode",
-                link: "/main/hospital",
+                name: "User",
+                link: "/main/user",
                 type: "link",
-                icon:mdiFileOutline,
+                icon:mdiEyeOutline,
                 child: [],
                 visible:[
-                    "ADMIN",
-                    "DEV"
+                    "DEV",
+                    "ADMIN"
                 ]
             }
         ]
@@ -71,16 +71,6 @@ const menu = [
         child: [],
         visible:[
             "PUBLIC",
-        ]
-    },
-    {
-        name: "User",
-        link: "/main/user",
-        type: "link",
-        icon:mdiEyeOutline,
-        child: [],
-        visible:[
-            "DEV",
         ]
     },
     {

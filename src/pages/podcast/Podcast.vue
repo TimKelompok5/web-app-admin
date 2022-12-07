@@ -69,7 +69,7 @@ export default defineComponent({
 <template>
   <v-row>
     <v-col cols="12">
-      <podcast-header />
+      <podcast-header :total="dataPodcast.totalPages" />
     </v-col>
 
     <v-col cols="12">

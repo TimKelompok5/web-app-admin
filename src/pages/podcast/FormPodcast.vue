@@ -16,7 +16,7 @@ export default defineComponent({
         const form = reactive({
             title: "",
             description: "",
-            thumbnail: "",
+            thumbnail: null,
         })
 
 
@@ -50,8 +50,8 @@ export default defineComponent({
                                     type="text" />
                             </v-col>
                             <v-col cols="12">
-                                <v-text-field v-model="form.thumbnail" cols="12" label="Thumbnail*" dense outlined required
-                                    type="text" />
+                                <v-file-input v-model="form.thumbnail" label="Thumbnail" outlined dense></v-file-input>
+                            
                             </v-col>
 
                         </v-row>

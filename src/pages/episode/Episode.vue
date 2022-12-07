@@ -74,7 +74,7 @@ export default defineComponent({
 <template>
   <v-row>
     <v-col cols="12">
-      <episode-header />
+      <episode-header :total="dataEpisode.totalPages" />
     </v-col>
 
     <v-col cols="12">

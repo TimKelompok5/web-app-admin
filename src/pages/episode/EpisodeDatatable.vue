@@ -24,8 +24,14 @@ export default defineComponent({
       <v-text-field label="Cari" single-line hide-details></v-text-field>
     </v-card-title>
     <v-data-table :headers="headers" :items="items" :loading="loading" item-key="id" class="table-rounded">
-      <template v-slot:[`item.links`]="{ item }">
-        <router-link :to="'/main/user-hospital/' + item.id">Users</router-link>
+      <template v-slot:[`item.audioUrl`]="{ item }">
+        <a target="blank" :href="item.audioUrl">audio.mp3</a>
+      </template>
+      <template v-slot:[`item.thumbnail`]="{ item }">
+        <a target="blank" :href="item.thumbnail">thumbnail.mp3</a>
+      </template>
+      <template v-slot:[`item.updatedAt`]="{ item }">
+        {{new Date(item.updatedAt)}}
       </template>
 
       <template #[`item.action`]="{ item }">

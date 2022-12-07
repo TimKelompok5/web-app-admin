@@ -1,24 +1,30 @@
 [
     {
-        "text": "email",
+        "text": "title",
         "align": "left",
         "sortable": true,
-        "value": "email"
+        "value": "title"
     },
     {
-        "text": "name",
+        "text": "description",
         "align": "left",
         "sortable": true,
-        "value": "name"
+        "value": "description"
     },
     {
-        "text": "level",
+        "text": "audio",
         "align": "left",
         "sortable": true,
-        "value": "level"
+        "value": "audioUrl"
     },
     {
-        "text": "Aktivitas Terakhir",
+        "text": "thumb",
+        "align": "left",
+        "sortable": true,
+        "value": "thumbnail"
+    },
+    {
+        "text": "Terakhir dirubah",
         "align": "left",
         "sortable": false,
         "value": "updatedAt"
