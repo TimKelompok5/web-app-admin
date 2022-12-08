@@ -95,7 +95,7 @@ const actions = {
                         if (body.isFile) {
                             //upload audio
                             return body.audioFile
-                        }else{
+                        } else {
                             return body.audioUrl
                         }
                     }
@@ -137,8 +137,13 @@ const actions = {
             const { db, bucket } = useFirebase()
 
             await deleteDoc(doc(db, "EPISODE", body.id))
-            await deleteObject(ref(bucket, `EPISODE/${body.id}/audio.mp3`))
-            await deleteObject(ref(bucket, `EPISODE/${body.id}/thumb.jpg`))
+            try {
+                await deleteObject(ref(bucket, `EPISODE/${body.id}/audio.mp3`))
+                await deleteObject(ref(bucket, `EPISODE/${body.id}/thumb.jpg`))
+            } catch (error) {
+
+            }
+
             commit(DELETE_EPISODE, body)
             resolve(true)
         })

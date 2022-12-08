@@ -1,6 +1,6 @@
 import { useFirebase } from "@/composables/useFirebase"
-import { collection, doc, setDoc, getDocs,deleteDoc ,query,where} from "firebase/firestore"
-import {ref,uploadBytes,getDownloadURL,deleteObject} from "firebase/storage"
+import { collection, doc, setDoc, getDocs, deleteDoc, query, where } from "firebase/firestore"
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage"
 
 
 const GET_PODCAST = 'GET_PODCAST'
@@ -47,13 +47,13 @@ const actions = {
     [GET_PODCAST]({ commit }, id) {
         return new Promise(async (resolve) => {
 
-            const { auth,db } = useFirebase()
+            const { auth, db } = useFirebase()
             auth.onAuthStateChanged(async (user) => {
-                const userRef = query(collection(db, "PODCAST"),where('createdBy','==',user.uid))
+                const userRef = query(collection(db, "PODCAST"), where('createdBy', '==', user.uid))
 
-                
+
                 const data = await getDocs(userRef)
-                console.log(data.docs)
+
                 const convert = data.docs.map((v) => {
 
                     const res = v.data()
@@ -76,25 +76,25 @@ const actions = {
     },
     [POST_PODCAST]({ commit }, body) {
         return new Promise(async (resolve) => {
-            const { auth, db,bucket } = useFirebase()
+            const { auth, db, bucket } = useFirebase()
             auth.onAuthStateChanged(async (user) => {
                 if (user) {
-                    const podcastRef = collection(db,"PODCAST")
+                    const podcastRef = collection(db, "PODCAST")
                     const uuid = doc(podcastRef)
 
-                    const thumbRef = ref(bucket,`PODCAST/${uuid.id}.jpg`)
-                    await uploadBytes(thumbRef,body.thumbnail)
+                    const thumbRef = ref(bucket, `PODCAST/${uuid.id}.jpg`)
+                    await uploadBytes(thumbRef, body.thumbnail)
                     const thumbUrl = await getDownloadURL(thumbRef)
 
 
                     const prepareData = {
-                        id:uuid.id,
+                        id: uuid.id,
                         createdBy: user.uid,
                         createdAt: new Date().getTime(),
-                        title:body.title,
-                        likes:0,
-                        description:body.description,
-                        thumbnail:thumbUrl
+                        title: body.title,
+                        likes: 0,
+                        description: body.description,
+                        thumbnail: thumbUrl
                     }
 
 
@@ -109,17 +109,19 @@ const actions = {
     },
     [PUT_PODCAST]({ commit }, body) {
         return new Promise(async (resolve) => {
-            
+
         })
     },
     [DELETE_PODCAST]({ commit }, body) {
         return new Promise(async (resolve) => {
 
-            const {db,bucket} = useFirebase()
-            await deleteDoc(doc(db,"PODCASR",body.id))
-            await deleteObject(ref(bucket,`PODCAST/${body.id}.jpg`))
+            const { db, bucket } = useFirebase()
+            await deleteDoc(doc(db, "PODCASR", body.id))
+            try {
+                await deleteObject(ref(bucket, `PODCAST/${body.id}.jpg`))
+            } catch (e) { }
 
-            commit(DELETE_PODCAST,body)
+            commit(DELETE_PODCAST, body)
             resolve(true)
         })
     },
@@ -165,7 +167,7 @@ const mutations = {
             .indexOf(data.id)
 
         state.dataPodcast.items.splice(index, 1)
-        state.dataPodcast.totalPages = (state.dataPodcast.totalPages -1)
+        state.dataPodcast.totalPages = (state.dataPodcast.totalPages - 1)
 
     }
 }
