@@ -1,0 +1,24 @@
+[
+    {
+        "text": "name",
+        "align": "left",
+        "sortable": true,
+        "value": "name"
+    },
+    {
+        "text": "image",
+        "align": "left",
+        "sortable": false,
+        "value": "image"
+    },
+    {
+        "text": "color",
+        "align": "left",
+        "sortable": false,
+        "value": "color"
+    },
+    {
+        "text": "Aksi",
+        "value": "action"
+    }
+]

@@ -46,6 +46,14 @@ const routess = [
         },
       },
       {
+        path:'topic',
+        name:'topic',
+        component:()=>import("@/pages/topic/Topic.vue"),
+        meta:{
+          requiresAuth:true
+        },
+      },
+      {
         path:'user',
         name:'user',
         component:()=>import("@/pages/user/User.vue"),

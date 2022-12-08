@@ -60,6 +60,17 @@ const menu = [
                     "DEV",
                     "ADMIN"
                 ]
+            },
+            {
+                name: "Topic",
+                link: "/main/topic",
+                type: "link",
+                icon:mdiEyeOutline,
+                child: [],
+                visible:[
+                    "DEV",
+                    "ADMIN"
+                ]
             }
         ]
     },

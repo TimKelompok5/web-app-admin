@@ -4,6 +4,7 @@ import auth from "@/store/module/auth.js"
 import user from "@/store/module/user.js"
 import podcast from "@/store/module/podcast.js"
 import episode from "@/store/module/episode.js"
+import topic from "@/store/module/topic.js"
 
 import {getCurrentInstance} from "vue"
 
@@ -17,7 +18,8 @@ const store = new Vuex.Store({
     auth,
     user,
     podcast,
-    episode
+    episode,
+    topic
   },
 })
 
