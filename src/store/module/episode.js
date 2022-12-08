@@ -1,6 +1,6 @@
 import { useFirebase } from "@/composables/useFirebase"
-import { collection,doc,getDocs,setDoc ,where,query,deleteDoc} from "firebase/firestore"
-import {ref,uploadBytes,getDownloadURL,deleteObject} from "firebase/storage"
+import { collection, doc, getDocs, setDoc, where, query, deleteDoc } from "firebase/firestore"
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage"
 
 
 const GET_EPISODE = 'GET_EPISODE'
@@ -37,7 +37,7 @@ const state = {
         currentPage: 1,
         totalPages: 1
     },
-    profile:{}
+    profile: {}
 
 }
 
@@ -45,27 +45,27 @@ const actions = {
     [GET_EPISODE]({ commit }, id) {
         return new Promise(async (resolve) => {
 
-            
+
             const { db } = useFirebase()
-            const userRef = query(collection(db, "EPISODE"),where("podcastId","==",id))
+            const userRef = query(collection(db, "EPISODE"), where("podcastId", "==", id))
 
             const data = await getDocs(userRef)
-        
+
             const convert = data.docs.map((v) => {
-                
+
                 const res = v.data()
-        
-                return{
-                    id:v.id,
+
+                return {
+                    id: v.id,
                     title: res.title != undefined ? res.title : "",
-                    description:res.description != undefined ? res.description : "",
-                    thumbnail:res.thumbnail != undefined ? res.thumbnail :"",
-                    likes:res.likes != undefined ? res.likes : 0,
-                    audioUrl:res.audioUrl != undefined ? res.audioUrl : "",
-                    createdAt:res.createdAt != undefined ? res.createdAt : 0,
+                    description: res.description != undefined ? res.description : "",
+                    thumbnail: res.thumbnail != undefined ? res.thumbnail : "",
+                    likes: res.likes != undefined ? res.likes : 0,
+                    audioUrl: res.audioUrl != undefined ? res.audioUrl : "",
+                    createdAt: res.createdAt != undefined ? res.createdAt : 0,
                     updatedAt: res.updatedAt != undefined ? res.updatedAt : 0,
-                    createdBy:res.createdBy != undefined ? res.createdBy : "",
-                    podcastId:res.podcastId != undefined ? res.podcastId : "",
+                    createdBy: res.createdBy != undefined ? res.createdBy : "",
+                    podcastId: res.podcastId != undefined ? res.podcastId : "",
                 }
             })
             commit(GET_EPISODE, convert)
@@ -75,48 +75,55 @@ const actions = {
     },
     [POST_EPISODE]({ commit }, body) {
         return new Promise(async (resolve) => {
-        
-            const {auth,db,bucket} = useFirebase()
-           
-            auth.onAuthStateChanged(async(user)=>{
-                if(user){
+
+            const { auth, db, bucket } = useFirebase()
+
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
                     //generate id 
-                    const episodeRef = collection(db,"EPISODE")
+                    const episodeRef = collection(db, "EPISODE")
                     const uuid = doc(episodeRef)
 
                     //upload thumbnail
-                    const thumbnailRef = ref(bucket,`EPISODE/${uuid.id}/thumb.jpg`)
-                    await uploadBytes(thumbnailRef,body.thumbnail)
+                    const thumbnailRef = ref(bucket, `EPISODE/${uuid.id}/thumb.jpg`)
+                    await uploadBytes(thumbnailRef, body.thumbnail)
                     const thumbUrl = await getDownloadURL(thumbnailRef)
-                    
-                    //upload audio
-                    const audioRef = ref(bucket,`EPISODE/${uuid.id}/audio.mp3`)
-                    await uploadBytes(audioRef,body.audioUrl)
-                    const audioUrl = await getDownloadURL(audioRef)
 
-                
-                    const prepareData = {
-                            createdBy:user.uid,
-                            createdAt: new Date().getTime(),
-                            updatedAt:new Date().getTime(),
-                            title:body.title,
-                            description:body.description,
-                            thumbnail:thumbUrl,
-                            audioUrl:audioUrl,
-                            podcastId:body.podcastId,
-                            id:uuid.id,
-                            likes:0
+                    //upload audio
+                    const audioRef = ref(bucket, `EPISODE/${uuid.id}/audio.mp3`)
+                    const uploadAudio = () => {
+                        if (body.isFile) {
+                            //upload audio
+                            return body.audioFile
+                        }else{
+                            return body.audioUrl
+                        }
                     }
-                    
-                   
-                    await setDoc(uuid,prepareData)
-                
-                    commit(POST_EPISODE,prepareData)
+
+                    await uploadBytes(audioRef, uploadAudio())
+                    const audioUrl = await getDownloadURL(audioRef)
+                    const prepareData = {
+                        createdBy: user.uid,
+                        createdAt: new Date().getTime(),
+                        updatedAt: new Date().getTime(),
+                        title: body.title,
+                        description: body.description,
+                        thumbnail: thumbUrl,
+                        audioUrl: audioUrl,
+                        podcastId: body.podcastId,
+                        id: uuid.id,
+                        likes: 0
+                    }
+
+
+                    await setDoc(uuid, prepareData)
+
+                    commit(POST_EPISODE, prepareData)
                     resolve(true)
                     return
                 }
                 resolve(false)
-                
+
             })
         })
     },
@@ -127,12 +134,12 @@ const actions = {
     },
     [DELETE_EPISODE]({ commit }, body) {
         return new Promise(async (resolve) => {
-            const {db,bucket} = useFirebase()
+            const { db, bucket } = useFirebase()
 
-            await deleteDoc(doc(db,"EPISODE",body.id))
-            await deleteObject(ref(bucket,`EPISODE/${body.id}/audio.mp3`))
-            await deleteObject(ref(bucket,`EPISODE/${body.id}/thumb.jpg`))
-            commit(DELETE_EPISODE,body)
+            await deleteDoc(doc(db, "EPISODE", body.id))
+            await deleteObject(ref(bucket, `EPISODE/${body.id}/audio.mp3`))
+            await deleteObject(ref(bucket, `EPISODE/${body.id}/thumb.jpg`))
+            commit(DELETE_EPISODE, body)
             resolve(true)
         })
     }
@@ -169,10 +176,10 @@ const mutations = {
             .indexOf(data.id)
 
         state.dataEpisode.items.splice(index, 1)
-        state.dataEpisode.totalPages = (state.dataEpisode.totalPages -1)
+        state.dataEpisode.totalPages = (state.dataEpisode.totalPages - 1)
 
     },
-    [SET_LOADING](state,isLoading){
+    [SET_LOADING](state, isLoading) {
         state.dataEpisode.loading = isLoading
     }
 }

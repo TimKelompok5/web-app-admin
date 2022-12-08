@@ -22,13 +22,16 @@ export default defineComponent({
         const audioBlobs = ref([])
         const stream = ref(null)
 
+
         const form = reactive({
             title: "",
             description: "",
             thumbnail: null,
             audioUrl: null,
             podcastId: "",
-            durationInSeconds: 0
+            durationInSeconds: 0,
+            isFile: false,
+            audioFile:null
         })
 
         const isRecording = ref(false)
@@ -138,13 +141,19 @@ export default defineComponent({
                             <v-col cols="12">
                                 <v-file-input v-model="form.thumbnail" label="Thumbnail" outlined dense></v-file-input>
                             </v-col>
-                            <v-col cols="12">
+                            <v-col>
+                                <v-switch v-model="form.isFile" label="Pilih audio dari file"></v-switch>
+                            </v-col>
+                            <v-col v-show="!form.isFile" cols="12">
                                 <v-btn cols="12" @click="toggle" outlined dark color="indigo">
                                     <v-icon dark :color="isRecording ? 'green accent-3' : 'grey lighten-1'">
                                         {{ mdiMicrophone }}
                                     </v-icon>
                                     {{ getFormatCount() }}
                                 </v-btn>
+                            </v-col>
+                            <v-col v-show="form.isFile" cols="12">
+                                <v-file-input v-model="form.audioFile" label="Pilih file audio" outlined dense></v-file-input>
                             </v-col>
 
 
